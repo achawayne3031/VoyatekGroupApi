@@ -9,6 +9,12 @@ use App\Validations\BlogValidator;
 use App\Validations\ErrorValidation;
 use App\Helpers\ResponseHelper;
 use App\Models\Blog;
+use App\Models\PostComments;
+use App\Models\PostLikes;
+
+use App\Models\Post;
+
+
 use App\Helpers\DBHelpers;
 
 class BlogController extends Controller
@@ -46,6 +52,20 @@ class BlogController extends Controller
                 }
 
                 DBHelpers::delete_query_multi(Blog::class, ['id' => $request->blog_id]);
+
+             
+
+                if(DBHelpers::exists(Post::class, ['blog_id' => $request->blog_id])){
+                    $posts = DBHelpers::where_query(Post::class, ['blog_id' => $request->blog_id]);
+                    foreach ($posts as $value) {
+                        # code...
+                        DBHelpers::delete_query_multi(PostComments::class, ['post_id' => $value->id]);
+                        DBHelpers::delete_query_multi(PostLikes::class, ['post_id' => $value->id]);
+                    }
+                    DBHelpers::delete_query_multi(Post::class, ['blog_id' => $request->blog_id]);
+                }
+
+
             
                 return ResponseHelper::success_response(
                     'Blog deleted successfully',

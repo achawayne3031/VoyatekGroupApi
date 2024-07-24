@@ -11,6 +11,9 @@ use App\Helpers\ResponseHelper;
 use App\Models\Post;
 use App\Models\Blog;
 use App\Helpers\DBHelpers;
+use App\Models\PostComments;
+use App\Models\PostLikes;
+
 
 class PostController extends Controller
 {
@@ -46,7 +49,13 @@ class PostController extends Controller
                     );
                 }
 
+
+            
+                DBHelpers::delete_query_multi(PostComments::class, ['post_id' => $request->post_id]);
+                DBHelpers::delete_query_multi(PostLikes::class, ['post_id' => $request->post_id]);
                 DBHelpers::delete_query_multi(Post::class, ['id' => $request->post_id]);
+
+                
             
                 return ResponseHelper::success_response(
                     'Post deleted successfully',
