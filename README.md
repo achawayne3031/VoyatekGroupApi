@@ -10,5 +10,8 @@ Set up Steps
 6. Run "php artisan serve" to start up the server
 
 
+Postman Link
+https://documenter.getpostman.com/view/16258920/2sA3kXEgE3
+
 
 Thank You
